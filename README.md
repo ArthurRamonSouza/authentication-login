@@ -1,6 +1,6 @@
-# Starting a TypeScript and Node Project
+# Authentication and Login system with TypeScript and Node Project
 
-## Init the project
+## Init and Setting the project
 
 [Help guide:](https://medium.com/@induwara99/a-step-by-step-guide-to-setting-up-a-node-js-project-with-typescript-6df4481cb335)
 
@@ -90,4 +90,48 @@ app.listen(port, () => {
 9. Add types gradually in the boilerplate code
 
 ## Session-Based Authentication
+
 [Help guide:](https://medium.com/@anandam00/understanding-session-based-authentication-in-nodejs-bc2a7b9e5a0b)
+
+1. npm install express-session (Install the session package)
+
+2. Use the middleware to set up the sessions
+
+```typescript
+const session = require("express-session");
+
+app.use(
+  session({
+    secret: "my-secret-key", // can be a value or an array, where only the first value will be used
+    resave: false, // always the session will be saved even if it wasn't modified
+    saveUninitialized: true, // first time the session will be saved
+    cookie: { secure: true }, // only sent the session cookies if its uses HTTPS
+  })
+);
+```
+
+3. Create a login route that sets a session to the user
+
+```typescript
+app.post("/login", (req, res) => {
+  // Validate user credentials
+  if (validCredentials) {
+    req.session.userId = userId; // Set session identifier
+    res.redirect("/dashboard");
+  } else {
+    res.render("login", { error: "Invalid username or password" });
+  }
+});
+```
+
+4. Create a middleware responsible for check the session in each request
+
+```typescript
+const requireAuth = (req, res, next) => {
+  if (req.session.userId) {
+    next(); // User is authenticated, continue to next middleware
+  } else {
+    res.redirect("/login"); // User is not authenticated, redirect to login page
+  }
+};
+```
