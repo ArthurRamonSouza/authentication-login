@@ -2,7 +2,9 @@
 
 ## Init the project
 
-1. npm init -y (New Node.js Project with the default comfigurations "-y" or "--yes")
+[Help guide:](https://medium.com/@induwara99/a-step-by-step-guide-to-setting-up-a-node-js-project-with-typescript-6df4481cb335)
+
+1. npm init -y (New Node.js Project with the default configurations "-y" or "--yes")
 
 2. npm install --save-dev typescript (Installing as a development dependency)
 
@@ -86,3 +88,6 @@ app.listen(port, () => {
    - npm start
 
 9. Add types gradually in the boilerplate code
+
+## Session-Based Authentication
+[Help guide:](https://medium.com/@anandam00/understanding-session-based-authentication-in-nodejs-bc2a7b9e5a0b)
