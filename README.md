@@ -95,10 +95,12 @@ app.listen(port, () => {
 
 1. npm install express-session (Install the session package)
 
-2. Use the middleware to set up the sessions
+2. npm i --save-dev @types/express-session (Install types)
+
+3. Use the middleware to set up the sessions
 
 ```typescript
-const session = require("express-session");
+import session from "express-session";
 
 app.use(
   session({
@@ -110,7 +112,7 @@ app.use(
 );
 ```
 
-3. Create a login route that sets a session to the user
+4. Create a login route that sets a session to the user
 
 ```typescript
 app.post("/login", (req, res) => {
@@ -124,7 +126,7 @@ app.post("/login", (req, res) => {
 });
 ```
 
-4. Create a middleware responsible for check the session in each request
+5. Create a middleware responsible for check the session in each request
 
 ```typescript
 const requireAuth = (req, res, next) => {
