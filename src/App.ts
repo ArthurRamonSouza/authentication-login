@@ -1,39 +1,35 @@
 import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import helmet from "helmet";
+import path from "path";
 
 export class App {
   public app: express.Application;
   public port: number;
+  public userAuthenticator: IUserAuthenticator;
 
-  constructor(appPort: number) {
+  constructor(appPort: number, userAuthenticator: IUserAuthenticator) {
     this.app = express();
     this.port = appPort;
     this.middlewares();
     this.routes();
+    this.userAuthenticator = userAuthenticator;
   }
 
   routes(): void {
     this.app.get("/login", (req: Request, res: Response) => {
-      res.sendFile(
-        "/home/inovatec-10/Documentos/GitHub/authentication-login/template/login.html"
-      );
+      res.sendFile(path.join(__dirname, "..", "template", "login.html"));
     });
 
     this.app.post("/login", (req: Request, res: Response) => {
       const { username, password } = req.body;
-      console.log(req.body);
-
-      if (username === "admin" && password === "password") {
+      if (this.userAuthenticator.authenticate(username, password)) {
         req.session.userId = username;
         res.redirect("/dashboard");
       } else {
-        res.sendFile(
-          "/home/inovatec-10/Documentos/GitHub/authentication-login/template/login.html",
-          {
-            headers: { error: "Invalid username or password" },
-          }
-        );
+        res.sendFile(path.join(__dirname, "..", "template", "login.html"), {
+          headers: { error: "Invalid username or password" },
+        });
       }
     });
 
@@ -65,7 +61,7 @@ export class App {
         resave: false,
         saveUninitialized: false,
         cookie: {
-          secure: false, // Set to true only if you are using HTTPS
+          secure: true, // Set to true only if you are using HTTPS
           httpOnly: true,
           maxAge: 1000 * 60 * 60, // 1 hour
         },
